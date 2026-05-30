@@ -31,7 +31,7 @@ body::before {
   pointer-events:none; z-index:999;
 }
 
-/* ── Setup screen ── */
+/* ── Setup ── */
 #setupScreen {
   position:fixed; inset:0; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:20px; padding:28px; z-index:60;
@@ -43,7 +43,7 @@ body::before {
 }
 .setup-sub {
   font-family:'Share Tech Mono',monospace; font-size:11px;
-  color:var(--muted); text-align:center; line-height:1.9; letter-spacing:0.5px;
+  color:var(--muted); text-align:center; line-height:1.9;
 }
 .setup-field { width:100%; max-width:480px; display:flex; flex-direction:column; gap:7px; }
 .setup-field label {
@@ -61,13 +61,13 @@ body::before {
   width:100%; max-width:480px; padding:16px;
   background:var(--amber); color:#000; border:none; border-radius:8px;
   font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700;
-  letter-spacing:3px; text-transform:uppercase; cursor:pointer; transition:all 0.2s;
+  letter-spacing:3px; text-transform:uppercase; cursor:pointer;
 }
-.launch-btn:active { transform:scale(0.97); }
-.launch-btn:disabled { opacity:0.5; cursor:not-allowed; }
+.launch-btn:active { opacity:0.85; }
+.launch-btn:disabled { opacity:0.45; cursor:not-allowed; }
 .setup-err {
   font-family:'Share Tech Mono',monospace; font-size:12px;
-  color:var(--red); text-align:center; display:none;
+  color:var(--red); text-align:center; display:none; max-width:400px; line-height:1.6;
 }
 
 /* ── HUD ── */
@@ -85,14 +85,8 @@ body::before {
 .mic-dot { width:8px; height:8px; border-radius:50%; background:var(--muted); flex-shrink:0; }
 .mic-dot.listening { background:var(--green); box-shadow:0 0 8px var(--green); animation:throb 1s infinite; }
 .mic-dot.speaking  { background:var(--blue);  box-shadow:0 0 8px var(--blue);  animation:throb 0.6s infinite; }
-.mic-dot.thinking  { background:var(--amber); box-shadow:0 0 8px var(--amber); animation:throb 0.8s infinite; }
 @keyframes throb { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-/* Settings icon to re-enter GAS URL */
-.settings-btn {
-  background:none; border:none; color:var(--muted); font-size:16px;
-  cursor:pointer; padding:4px; line-height:1;
-}
+.settings-btn { background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; padding:4px; }
 
 /* ── Tap zone ── */
 .tap-zone {
@@ -107,27 +101,31 @@ body::before {
 }
 .tap-zone.listening::before { background:radial-gradient(circle,rgba(0,230,118,0.08) 0%,transparent 70%); }
 .tap-zone.speaking::before  { background:radial-gradient(circle,rgba(68,138,255,0.09) 0%,transparent 70%); }
-.tap-zone.thinking::before  { background:radial-gradient(circle,rgba(255,179,0,0.1) 0%,transparent 70%); }
 
 .q-number { font-size:108px; font-weight:700; color:var(--amber); text-shadow:0 0 40px rgba(255,179,0,0.3); line-height:1; letter-spacing:-4px; transition:color 0.3s; }
 .q-number.dim { color:rgba(255,179,0,0.18); }
 .q-of { font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--muted); letter-spacing:2px; margin-top:4px; }
+
 .q-text-wrap { max-width:88%; text-align:center; margin-top:18px; padding:0 12px; }
 .q-text { font-size:21px; font-weight:600; line-height:1.38; color:var(--text); }
 .q-text.empty { color:var(--muted); font-size:15px; }
 
+/* Waveform */
 .wave-ring { position:absolute; bottom:108px; display:flex; align-items:center; gap:3px; height:32px; }
 .wb { width:3px; border-radius:2px; background:var(--blue); height:4px; }
 .wb.on { animation:wba var(--d) ease-in-out infinite alternate; animation-delay:var(--dl); }
 @keyframes wba { from{height:3px} to{height:var(--h)} }
 
-.status-lbl { position:absolute; bottom:68px; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; transition:color 0.3s; }
+.status-lbl {
+  position:absolute; bottom:68px; font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; transition:color 0.3s;
+}
 .status-lbl.listening { color:var(--green); }
 .status-lbl.speaking  { color:var(--blue); }
-.status-lbl.thinking  { color:var(--amber); }
 
 .tap-hint { position:absolute; bottom:38px; font-family:'Share Tech Mono',monospace; font-size:10px; color:rgba(255,255,255,0.13); letter-spacing:1.5px; text-transform:uppercase; }
 
+/* Listen rings */
 .lr { position:absolute; width:110px; height:110px; border-radius:50%; border:1px solid rgba(0,230,118,0.25); animation:lring 1.8s ease-out infinite; opacity:0; display:none; }
 .lr:nth-child(2){animation-delay:0.6s} .lr:nth-child(3){animation-delay:1.2s}
 @keyframes lring { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(2.8);opacity:0} }
@@ -136,13 +134,13 @@ body::before {
 @keyframes rpl { to{transform:scale(4);opacity:0} }
 
 /* ── Answer panel ── */
-.ans-panel { background:var(--hud); border-top:1px solid var(--bdr); padding:12px 18px; min-height:88px; max-height:36vh; overflow-y:auto; flex-shrink:0; }
+.ans-panel {
+  background:var(--hud); border-top:1px solid var(--bdr);
+  padding:12px 18px; min-height:88px; max-height:40vh; overflow-y:auto; flex-shrink:0;
+}
 .ans-panel::-webkit-scrollbar{width:3px} .ans-panel::-webkit-scrollbar-thumb{background:var(--bdr)}
-.ans-label { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:2px; margin-bottom:7px; display:flex; align-items:center; gap:7px; }
-.gemini-tag { color:var(--blue); background:rgba(68,138,255,0.1); border:1px solid rgba(68,138,255,0.2); border-radius:3px; padding:1px 6px; }
-.ans-text { font-size:15px; line-height:1.65; color:rgba(232,234,237,0.85); }
-.ans-text.loading::after { content:'▋'; color:var(--amber); animation:blink 0.6s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.ans-label { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:2px; margin-bottom:7px; }
+.ans-text { font-size:15px; line-height:1.7; color:rgba(232,234,237,0.85); }
 
 /* ── Command bar ── */
 .cmd-bar { background:var(--hud); border-top:1px solid var(--bdr); padding:8px 14px; display:flex; gap:7px; flex-wrap:wrap; flex-shrink:0; }
@@ -151,17 +149,17 @@ body::before {
 /* ── Toast ── */
 .toast { position:fixed; top:62px; left:50%; transform:translateX(-50%) translateY(-16px); background:rgba(10,13,20,0.95); border:1px solid rgba(255,179,0,0.3); border-radius:8px; padding:9px 16px; font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--amber); letter-spacing:1px; z-index:200; opacity:0; transition:all 0.25s; pointer-events:none; white-space:nowrap; max-width:90vw; overflow:hidden; text-overflow:ellipsis; }
 .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-.toast.err { border-color:var(--red); color:var(--red); }
+.toast.err  { border-color:var(--red); color:var(--red); }
 </style>
 </head>
 <body>
 
-<!-- ── Setup ── -->
+<!-- Setup -->
 <div id="setupScreen">
   <h1>SheetSpeak<br>Drive</h1>
   <p class="setup-sub">
-    Paste your Apps Script Web App URL below.<br>
-    This is saved on your phone — you only do this once.
+    Run <b>generateAnswers()</b> in Apps Script first<br>
+    to fill Column C, then launch the app.
   </p>
   <div class="setup-field">
     <label>Apps Script Web App URL</label>
@@ -172,15 +170,15 @@ body::before {
   <div class="setup-err" id="setupErr"></div>
   <button class="launch-btn" id="launchBtn">▶ LAUNCH</button>
   <p class="setup-sub">
-    Say <span style="color:var(--amber)">"Start"</span> · 
-    <span style="color:var(--amber)">"Question 5"</span> · 
-    <span style="color:var(--amber)">"Next"</span> · 
-    <span style="color:var(--amber)">"Pass"</span> · 
-    <span style="color:var(--amber)">"Repeat"</span>
+    <span style="color:var(--amber)">"Start"</span> ·
+    <span style="color:var(--amber)">"Question 5"</span> ·
+    <span style="color:var(--amber)">"Next / Pass"</span> ·
+    <span style="color:var(--amber)">"Repeat"</span> ·
+    <span style="color:var(--amber)">"Random"</span>
   </p>
 </div>
 
-<!-- ── HUD ── -->
+<!-- HUD -->
 <div id="hudScreen">
   <div class="top-bar">
     <span class="app-name">DRIVE</span>
@@ -188,7 +186,7 @@ body::before {
       <div class="stat-chip">Q <span class="val" id="topIdx">—</span></div>
       <div class="stat-chip">OF <span class="val" id="topTotal">—</span></div>
       <div class="mic-dot" id="micDot"></div>
-      <button class="settings-btn" id="settingsBtn" title="Change GAS URL">⚙</button>
+      <button class="settings-btn" id="settingsBtn">⚙</button>
     </div>
   </div>
 
@@ -197,17 +195,17 @@ body::before {
     <div class="lr" id="lr2"></div>
     <div class="lr" id="lr3"></div>
     <div class="q-number dim" id="qNum">—</div>
-    <div class="q-of" id="qOf">TAP TO SPEAK</div>
+    <div class="q-of"         id="qOf">TAP TO SPEAK</div>
     <div class="q-text-wrap">
       <div class="q-text empty" id="qText">Say "Start" or tap to begin</div>
     </div>
     <div class="wave-ring" id="waveRing"></div>
-    <div class="status-lbl" id="statusLbl">READY</div>
+    <div class="status-lbl"  id="statusLbl">READY</div>
     <div class="tap-hint">TAP ANYWHERE · SPEAK COMMAND</div>
   </div>
 
   <div class="ans-panel">
-    <div class="ans-label">GEMINI ANSWER <span class="gemini-tag">AI</span></div>
+    <div class="ans-label">ANSWER</div>
     <div class="ans-text" id="ansText">—</div>
   </div>
 
@@ -227,16 +225,10 @@ body::before {
 <div class="toast" id="toastEl"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  SheetSpeak Drive — GitHub Pages edition
-//  Uses fetch() to call GAS. Mic works because page is
-//  served from its own origin, not inside a GAS iframe.
-// ═══════════════════════════════════════════════════════
-
 const STORAGE_KEY = 'sheetspeakGasUrl';
 
 const S = {
-  gasUrl:'', questions:[], currentIdx:-1,
+  gasUrl:'', qa:[], currentIdx:-1,
   rate:1.0, status:'idle', autoMode:false
 };
 
@@ -306,27 +298,17 @@ function speakAsync(text) {
 }
 function stopSpeaking() { speechSynthesis.cancel(); setStatus('idle'); }
 
-// ── Fetch wrappers ────────────────────────────────────
-async function gasGet(action, params) {
-  let url = S.gasUrl + '?action=' + action;
-  if (params) url += '&' + new URLSearchParams(params).toString();
-  const res  = await fetch(url);
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  return data;
-}
-
 // ── STT ───────────────────────────────────────────────
 let recognition = null, recogActive = false, recogLocked = false;
 
 function initSTT() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { toast('⚠ Speech not supported — use Chrome on Android', true); return; }
+  if (!SR) { toast('⚠ Use Chrome on Android for voice commands', true); return; }
 
   recognition = new SR();
-  recognition.continuous = false;
+  recognition.continuous     = false;
   recognition.interimResults = false;
-  recognition.lang = 'en-IN';
+  recognition.lang           = 'en-IN';
   recognition.maxAlternatives = 3;
 
   recognition.onstart  = () => { recogActive = true; setStatus('listening'); };
@@ -338,8 +320,7 @@ function initSTT() {
   recognition.onerror  = ev => {
     recogActive = false; recogLocked = false;
     if (ev.error !== 'no-speech' && ev.error !== 'aborted') toast('Mic: ' + ev.error, true);
-    if (S.autoMode && S.status !== 'thinking' && S.status !== 'speaking')
-      setTimeout(startListening, 800);
+    if (S.autoMode && S.status !== 'speaking') setTimeout(startListening, 800);
   };
   recognition.onresult = ev => {
     const t = Array.from(ev.results).map(r => r[0].transcript).join(' ').toLowerCase().trim();
@@ -349,7 +330,7 @@ function initSTT() {
 
 function startListening() {
   if (recogLocked || recogActive) return;
-  if (S.status === 'speaking' || S.status === 'thinking') return;
+  if (S.status === 'speaking') return;
   try { recogLocked = true; recognition.start(); } catch(_) { recogLocked = false; }
 }
 
@@ -364,11 +345,10 @@ function setStatus(st) {
   S.status = st;
   tapZone.className = 'tap-zone ' + st;
   const map = {
-    idle:     ['TAP TO SPEAK',     ''],
-    listening:['LISTENING…',       'listening'],
-    thinking: ['GEMINI THINKING…', 'thinking'],
-    speaking: ['SPEAKING…',        'speaking'],
-    paused:   ['PAUSED',           ''],
+    idle:     ['TAP TO SPEAK',  ''],
+    listening:['LISTENING…',    'listening'],
+    speaking: ['SPEAKING…',     'speaking'],
+    paused:   ['PAUSED',        ''],
   };
   const [txt, cls] = map[st] || map.idle;
   statusLbl.textContent = txt;
@@ -382,42 +362,33 @@ function setStatus(st) {
 function updateHUD(idx) {
   S.currentIdx = idx;
   const num = idx + 1;
-  qNum.textContent = num; qNum.classList.remove('dim');
-  qOf.textContent  = 'OF ' + S.questions.length;
-  qText.textContent = S.questions[idx]; qText.classList.remove('empty');
+  const row = S.qa[idx];
+  qNum.textContent  = num;  qNum.classList.remove('dim');
+  qOf.textContent   = 'OF ' + S.qa.length;
+  qText.textContent = row.q; qText.classList.remove('empty');
+  ansText.textContent = row.a || '—';
   $('topIdx').textContent   = num;
-  $('topTotal').textContent = S.questions.length;
-  ansText.textContent = '—'; ansText.classList.remove('loading');
+  $('topTotal').textContent = S.qa.length;
 }
 
-// ── Ask question ──────────────────────────────────────
-async function askQuestion(idx) {
-  if (idx < 0 || idx >= S.questions.length) {
+// ── Play Q+A ──────────────────────────────────────────
+async function playQA(idx) {
+  if (idx < 0 || idx >= S.qa.length) {
     await speakAsync('That question does not exist.'); return;
   }
-  updateHUD(idx);
-  const q = S.questions[idx];
 
-  await speakAsync('Question ' + (idx+1) + '. ' + q);
+  updateHUD(idx);
+  const row = S.qa[idx];
+
+  // Speak question
+  await speakAsync('Question ' + (idx+1) + '. ' + row.q);
   if (S.status === 'paused') return;
 
-  setStatus('thinking');
-  ansText.textContent = ''; ansText.classList.add('loading');
-
-  let answer = '';
-  try {
-    const data = await gasGet('askGemini', { q });
-    answer = data.answer || 'No answer returned.';
-  } catch(err) {
-    answer = 'Could not get answer. ' + err.message;
-    toast(err.message, true);
-  }
-
-  ansText.classList.remove('loading');
-  ansText.textContent = answer;
-
+  // Speak answer (instant — already in sheet)
+  const answer = row.a || 'No answer available for this question.';
   await speakAsync(answer);
 
+  // After answer, listen for next command
   if (S.autoMode && S.status !== 'paused') {
     setStatus('idle');
     setTimeout(() => {
@@ -448,39 +419,41 @@ function handleCommand(raw) {
   }
 
   if (/\b(start|begin|go|play)\b/.test(t)) {
-    S.autoMode = true; stopSpeaking(); askQuestion(0); return;
+    S.autoMode = true; stopSpeaking(); playQA(0); return;
   }
   if (/\b(next|pass|skip|forward)\b/.test(t)) {
     const ni = S.currentIdx + 1;
-    if (ni >= S.questions.length) { speakAsync('That was the last question.'); return; }
-    stopSpeaking(); askQuestion(ni); return;
+    if (ni >= S.qa.length) { speakAsync('That was the last question.'); return; }
+    stopSpeaking(); playQA(ni); return;
   }
   if (/\b(previous|back|before)\b/.test(t)) {
     const pi = S.currentIdx - 1;
     if (pi < 0) { speakAsync('Already at the first question.'); return; }
-    stopSpeaking(); askQuestion(pi); return;
+    stopSpeaking(); playQA(pi); return;
   }
   if (/\b(question|number|goto|go to|jump)\b/.test(t) || /^\d+$/.test(t.trim())) {
     const n = num(t); if (!n) { speakAsync('Which question number?'); return; }
     const idx = n - 1;
-    if (idx < 0 || idx >= S.questions.length) {
-      speakAsync('Question ' + n + ' does not exist. I have ' + S.questions.length + '.'); return;
+    if (idx < 0 || idx >= S.qa.length) {
+      speakAsync('Question ' + n + ' does not exist. I have ' + S.qa.length + '.'); return;
     }
-    stopSpeaking(); askQuestion(idx); return;
+    stopSpeaking(); playQA(idx); return;
   }
+  // Bare number
   const bn = num(t);
-  if (bn !== null && bn >= 1 && bn <= S.questions.length) {
-    stopSpeaking(); askQuestion(bn-1); return;
+  if (bn !== null && bn >= 1 && bn <= S.qa.length) {
+    stopSpeaking(); playQA(bn-1); return;
   }
   if (/\b(repeat|again|replay)\b/.test(t)) {
     if (S.currentIdx < 0) { speakAsync('Nothing to repeat.'); return; }
-    stopSpeaking(); askQuestion(S.currentIdx); return;
+    stopSpeaking(); playQA(S.currentIdx); return;
   }
   if (/\b(random|surprise|any)\b/.test(t)) {
-    stopSpeaking(); askQuestion(Math.floor(Math.random()*S.questions.length)); return;
+    stopSpeaking(); playQA(Math.floor(Math.random()*S.qa.length)); return;
   }
   if (/\b(pause|stop|wait|hold)\b/.test(t)) {
-    speechSynthesis.pause(); S.status='paused'; setStatus('paused'); speakAsync('Paused.'); return;
+    speechSynthesis.pause(); S.status='paused'; setStatus('paused');
+    speakAsync('Paused.'); return;
   }
   if (/\b(resume|continue|go on|unpause)\b/.test(t)) {
     speechSynthesis.resume(); setStatus('idle');
@@ -488,10 +461,10 @@ function handleCommand(raw) {
   }
   if (/\b(where|current|which question)\b/.test(t)) {
     if (S.currentIdx < 0) { speakAsync('Not started yet.'); return; }
-    speakAsync('Question ' + (S.currentIdx+1) + ' of ' + S.questions.length + '.'); return;
+    speakAsync('Question ' + (S.currentIdx+1) + ' of ' + S.qa.length + '.'); return;
   }
   if (/\b(how many|total|count)\b/.test(t)) {
-    speakAsync('There are ' + S.questions.length + ' questions.'); return;
+    speakAsync('There are ' + S.qa.length + ' questions.'); return;
   }
   speakAsync('I did not catch that. Say next, pass, start, or a question number.');
 }
@@ -500,17 +473,21 @@ function handleCommand(raw) {
 async function launch(url) {
   const btn = $('launchBtn');
   const err = $('setupErr');
-  btn.disabled = true;
-  btn.textContent = 'LOADING…';
+  btn.disabled = true; btn.textContent = 'LOADING…';
   err.style.display = 'none';
 
   try {
     S.gasUrl = url;
-    const data = await gasGet('getQuestions');
-    if (!data.questions || data.questions.length === 0)
-      throw new Error('No questions found in Column B of your Sheet.');
+    const res  = await fetch(url + '?action=getQA');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    if (!data.qa || data.qa.length === 0)
+      throw new Error('No Q&A found. Run generateAnswers() in Apps Script first, then redeploy.');
 
-    S.questions = data.questions;
+    const missing = data.qa.filter(r => !r.a).length;
+    if (missing > 0) toast(missing + ' questions have no answer yet — run generateAnswers()', true);
+
+    S.qa = data.qa;
     localStorage.setItem(STORAGE_KEY, url);
 
     $('setupScreen').style.display = 'none';
@@ -521,7 +498,7 @@ async function launch(url) {
 
     setTimeout(() => {
       speakAsync(
-        'SheetSpeak Drive ready. ' + S.questions.length + ' questions loaded. ' +
+        'SheetSpeak Drive ready. ' + S.qa.length + ' questions loaded. ' +
         'Tap and say Start to begin, or say a question number.'
       ).then(() => { S.autoMode = true; startListening(); });
     }, 300);
@@ -529,8 +506,7 @@ async function launch(url) {
   } catch(e) {
     err.textContent = '⚠ ' + e.message;
     err.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = '▶ LAUNCH';
+    btn.disabled = false; btn.textContent = '▶ LAUNCH';
   }
 }
 
@@ -540,22 +516,17 @@ $('launchBtn').addEventListener('click', () => {
   launch(url);
 });
 
-// Settings button — go back to setup
 $('settingsBtn').addEventListener('click', () => {
   speechSynthesis.cancel();
   $('hudScreen').classList.remove('active');
   $('setupScreen').style.display = 'flex';
-  $('launchBtn').disabled = false;
-  $('launchBtn').textContent = '▶ LAUNCH';
+  $('launchBtn').disabled = false; $('launchBtn').textContent = '▶ LAUNCH';
 });
 
-// ── Auto-load saved URL ───────────────────────────────
+// Auto-load saved URL
 window.addEventListener('load', () => {
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    $('gasUrlInput').value = saved;
-    launch(saved);
-  }
+  if (saved) { $('gasUrlInput').value = saved; launch(saved); }
 });
 </script>
 </body>
