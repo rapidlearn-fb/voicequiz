@@ -384,11 +384,15 @@ async function playQA(idx) {
   await speakAsync('Question ' + (idx+1) + '. ' + row.q);
   if (S.status === 'paused') return;
 
-  // Speak answer (instant — already in sheet)
+  // ── PAUSE — listen for "pass" or wait 8 seconds then speak answer ──
+  const passed = await waitOrPass(8);
+  if (S.status === 'paused') return;
+  if (passed) return;  // user said pass — playQA already called next
+
+  // Speak answer
   const answer = row.a || 'No answer available for this question.';
   await speakAsync(answer);
 
-  // After answer, listen for next command
   if (S.autoMode && S.status !== 'paused') {
     setStatus('idle');
     setTimeout(() => {
@@ -508,6 +512,59 @@ async function launch(url) {
     err.style.display = 'block';
     btn.disabled = false; btn.textContent = '▶ LAUNCH';
   }
+}
+  
+// Waits [seconds] while listening for pass/next/skip.
+// Returns true if user passed, false if time elapsed normally.
+function waitOrPass(seconds) {
+  return new Promise(resolve => {
+    let resolved = false;
+    let timer;
+
+    // Start countdown
+    timer = setTimeout(() => {
+      if (resolved) return;
+      resolved = true;
+      if (recognition && recogActive) recognition.stop();
+      resolve(false);  // time's up, play answer
+    }, seconds * 1000);
+
+    // Listen during the pause
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR || !recognition) {
+      // No STT — just wait silently
+      return;
+    }
+
+    // Temporarily override onresult to catch pass/next during pause
+    const prevOnResult = recognition.onresult;
+    recognition.onresult = ev => {
+      const t = Array.from(ev.results).map(r => r[0].transcript).join(' ').toLowerCase().trim();
+      toast('"' + t + '"');
+
+      if (/\b(pass|skip|next|forward)\b/.test(t)) {
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(timer);
+        recognition.onresult = prevOnResult;  // restore
+        // Move to next question
+        const ni = S.currentIdx + 1;
+        if (ni < S.qa.length) { playQA(ni); } 
+        else { speakAsync('That was the last question.'); }
+        resolve(true);
+      } else if (/\b(answer|tell me|go|reveal)\b/.test(t)) {
+        // User wants answer immediately
+        if (resolved) return;
+        resolved = true;
+        clearTimeout(timer);
+        recognition.onresult = prevOnResult;
+        resolve(false);  // play answer now
+      }
+      // Any other command — ignore during pause window
+    };
+
+    startListening();
+  });
 }
 
 $('launchBtn').addEventListener('click', () => {
